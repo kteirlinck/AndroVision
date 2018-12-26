@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
 
 
@@ -24,8 +24,56 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
+        <com.google.firebase.codelab.mlkit.GraphicOverlay
+            android:id="@+id/graphic_overlay"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            />
+
     </RelativeLayout>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:context=".MainActivity">
+
+
+        <Button
+            android:id="@+id/button_text"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="@string/find_text_button" />
+
+        <Button
+            android:id="@+id/button_face"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="@string/find_face_contour_button" />
+
+        <Button
+            android:id="@+id/button_cloud_text"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="@string/find_text_cloud_button" />
+
+        <Button
+            android:id="@+id/button_run_custom_model"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="@string/find_objects_button" />
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
