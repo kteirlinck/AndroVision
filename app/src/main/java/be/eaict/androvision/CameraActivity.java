@@ -5,6 +5,7 @@ package be.eaict.androvision;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,19 +13,34 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+import com.google.firebase.ml.vision.text.RecognizedLanguage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +53,11 @@ public class CameraActivity extends AppCompatActivity {
 
     Uri picUri;
 
+    private Bitmap selectedImage;
+
+    private Button mTextButton;
+    private TextView mTextView;
+
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
@@ -48,6 +69,16 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        mTextView = findViewById(R.id.txvResult);
+
+        mTextButton = findViewById(R.id.button_text);
+        mTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textRecognition();
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +103,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
     }
+
 
     public Intent getPickImageChooserIntent() {
 
@@ -139,7 +171,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 String filePath = getImageFilePath(data);
                 if (filePath != null) {
-                    Bitmap selectedImage = BitmapFactory.decodeFile(filePath);
+                    selectedImage = BitmapFactory.decodeFile(filePath);
                     imageView.setImageBitmap(selectedImage);
                 }
             }
@@ -147,6 +179,45 @@ public class CameraActivity extends AppCompatActivity {
         }
 
     }
+
+    private void textRecognition() {
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(selectedImage);
+
+        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+                .getOnDeviceTextRecognizer();
+
+        Task<FirebaseVisionText> result =
+                detector.processImage(image)
+                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                            @Override
+                            public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                // Task completed successfully
+                                processText(firebaseVisionText);
+                            }
+                        })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                    }
+                                });
+    }
+
+    private void processText(FirebaseVisionText text){
+        List<FirebaseVisionText.TextBlock> blocks = text.getTextBlocks();
+        if (blocks.size() == 0){
+            Toast.makeText(CameraActivity.this, "No text :(", Toast.LENGTH_LONG).show();
+            return;
+        }
+        for (FirebaseVisionText.TextBlock block : text.getTextBlocks()){
+            String txt = block.getText();
+            mTextView.setTextSize(24);
+            mTextView.setText(txt);
+        }
+    }
+
 
 
     private String getImageFromFilePath(Intent data) {

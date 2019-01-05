@@ -17,12 +17,34 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/imagetotextract"
             android:scaleType="centerCrop" />
+
+        <Button
+            android:id="@+id/button_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="138dp"
+            android:text="@string/button_text_string" />
+
+        <TextView
+            android:id="@+id/txvResult"
+            android:layout_width="355dp"
+            android:layout_height="128dp"
+            android:layout_below="@+id/imageView"
+            android:layout_alignStart="@+id/imageView"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="49dp"
+            android:text="TextView" />
 
     </RelativeLayout>
 
