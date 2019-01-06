@@ -208,15 +208,24 @@ CameraActivity extends AppCompatActivity {
 
     private void processText(FirebaseVisionText text){
         List<FirebaseVisionText.TextBlock> blocks = text.getTextBlocks();
+        String txt = "";
         if (blocks.size() == 0){
             Toast.makeText(CameraActivity.this, "No text :(", Toast.LENGTH_LONG).show();
             return;
         }
+
         for (FirebaseVisionText.TextBlock block : text.getTextBlocks()){
-            String txt = block.getText();
+            txt = block.getText() + txt;
+            mTextView.setTextSize(24);
+            mTextView.setText(txt);
+        }/*
+        for(int i = 0; i<blocks.size(); i++)
+        {
+            txt = txt + text.getTextBlocks();
             mTextView.setTextSize(24);
             mTextView.setText(txt);
         }
+        */
     }
 
 
