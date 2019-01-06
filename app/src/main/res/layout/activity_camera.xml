@@ -32,7 +32,7 @@
             android:layout_below="@+id/imageView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="138dp"
-            android:text="@string/button_text_string" />
+            android:text="@string/button_text_string"/>
 
         <TextView
             android:id="@+id/txvResult"
@@ -44,7 +44,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="49dp"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 

@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -65,6 +66,12 @@ CameraActivity extends AppCompatActivity {
 
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
+
+    private static final String LOG_TAG = CameraActivity.class.getSimpleName();
+    private String processedText;
+
+    public static final String EXTRA_MESSAGE = "be.eaict.android.androvision.extra.MESSAGE";
+    public static final int TEXT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,10 +220,12 @@ CameraActivity extends AppCompatActivity {
             return;
         }
         for (FirebaseVisionText.TextBlock block : text.getTextBlocks()){
-            String txt = block.getText();
+            processedText = block.getText();
             mTextView.setTextSize(24);
-            mTextView.setText(txt);
+            mTextView.setText(processedText);
         }
+
+
     }
 
 
@@ -254,6 +263,17 @@ CameraActivity extends AppCompatActivity {
 
         // get the file url
         picUri = savedInstanceState.getParcelable("pic_uri");
+    }
+
+    public void launchSecondActivity(View view) {
+        Log.d(LOG_TAG, "Button clicked!");
+
+        Intent intent = new Intent(this, TextractActivity.class);
+        //String message = mTextView.getText().toString();
+
+        intent.putExtra(EXTRA_MESSAGE, processedText);
+        startActivityForResult(intent, TEXT_REQUEST);
+
     }
 
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
