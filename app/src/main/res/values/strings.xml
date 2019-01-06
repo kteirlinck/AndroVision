@@ -2,4 +2,5 @@
     <string name="app_name">AndroVision</string>
     <string name="imagetotextract">ImageToTextract</string>
     <string name="button_text_string">Find Text</string>
+    <string name="btn_next_string">NEXT</string>
 </resources>

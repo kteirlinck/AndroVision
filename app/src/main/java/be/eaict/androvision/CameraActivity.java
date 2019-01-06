@@ -58,7 +58,7 @@ CameraActivity extends AppCompatActivity {
     private Bitmap selectedImage;
 
     private Button mTextButton;
-    private TextView mTextView;
+    private Button mNextButton;
 
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -68,7 +68,7 @@ CameraActivity extends AppCompatActivity {
     private final static int IMAGE_RESULT = 200;
 
     private static final String LOG_TAG = CameraActivity.class.getSimpleName();
-    private String processedText;
+    private String processedText = "";
 
     public static final String EXTRA_MESSAGE = "be.eaict.android.androvision.extra.MESSAGE";
     public static final int TEXT_REQUEST = 1;
@@ -78,15 +78,17 @@ CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        mTextView = findViewById(R.id.txvResult);
-
         mTextButton = findViewById(R.id.button_text);
+        mTextButton.setVisibility(View.GONE);
         mTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 textRecognition();
             }
         });
+
+        mNextButton = findViewById(R.id.button_next);
+        mNextButton.setVisibility(View.GONE);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -96,22 +98,16 @@ CameraActivity extends AppCompatActivity {
             }
         });
 
-
         permissions.add(CAMERA);
         permissions.add(WRITE_EXTERNAL_STORAGE);
         permissions.add(READ_EXTERNAL_STORAGE);
         permissionsToRequest = findUnAskedPermissions(permissions);
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-
             if (permissionsToRequest.size() > 0)
                 requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
-
     }
-
 
     public Intent getPickImageChooserIntent() {
 
@@ -169,8 +165,6 @@ CameraActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         if (resultCode == Activity.RESULT_OK) {
 
             ImageView imageView = findViewById(R.id.imageView);
@@ -181,11 +175,10 @@ CameraActivity extends AppCompatActivity {
                 if (filePath != null) {
                     selectedImage = BitmapFactory.decodeFile(filePath);
                     imageView.setImageBitmap(selectedImage);
+                    mTextButton.setVisibility(View.VISIBLE);
                 }
             }
-
         }
-
     }
 
     private void textRecognition() {
@@ -208,7 +201,6 @@ CameraActivity extends AppCompatActivity {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         // Task failed with an exception
-                                        // ...
                                     }
                                 });
     }
@@ -219,16 +211,14 @@ CameraActivity extends AppCompatActivity {
             Toast.makeText(CameraActivity.this, "No text :(", Toast.LENGTH_LONG).show();
             return;
         }
+
         for (FirebaseVisionText.TextBlock block : text.getTextBlocks()){
-            processedText = block.getText();
-            mTextView.setTextSize(24);
-            mTextView.setText(processedText);
+            processedText = block.getText() + processedText;
+            Toast.makeText(CameraActivity.this, "Text found! Press next.", Toast.LENGTH_LONG).show();
+            mTextButton.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.VISIBLE);
         }
-
-
     }
-
-
 
     private String getImageFromFilePath(Intent data) {
         boolean isCamera = data == null || data.getData() == null;
@@ -267,13 +257,9 @@ CameraActivity extends AppCompatActivity {
 
     public void launchSecondActivity(View view) {
         Log.d(LOG_TAG, "Button clicked!");
-
         Intent intent = new Intent(this, TextractActivity.class);
-        //String message = mTextView.getText().toString();
-
         intent.putExtra(EXTRA_MESSAGE, processedText);
         startActivityForResult(intent, TEXT_REQUEST);
-
     }
 
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
@@ -284,7 +270,6 @@ CameraActivity extends AppCompatActivity {
                 result.add(perm);
             }
         }
-
         return result;
     }
 
@@ -313,28 +298,21 @@ CameraActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         switch (requestCode) {
-
             case ALL_PERMISSIONS_RESULT:
                 for (String perms : permissionsToRequest) {
                     if (!hasPermission(perms)) {
                         permissionsRejected.add(perms);
                     }
                 }
-
                 if (permissionsRejected.size() > 0) {
-
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
+                            showMessageOKCancel("These are essential permissions. Please grant them in order for the app to function.",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-
                                                 requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
                                             }
                                         }
@@ -342,12 +320,9 @@ CameraActivity extends AppCompatActivity {
                             return;
                         }
                     }
-
                 }
-
                 break;
         }
-
     }
 }
 
