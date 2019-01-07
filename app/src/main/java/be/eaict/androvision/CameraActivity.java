@@ -3,6 +3,7 @@ package be.eaict.androvision;
 // source: https://www.journaldev.com/23219/android-capture-image-camera-gallery-using-fileprovider
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,8 +14,10 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -167,13 +170,16 @@ public class CameraActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             ImageView imageView = findViewById(R.id.imageView);
+            TextView textView = findViewById(R.id.textview);
             imageView.setVisibility(View.INVISIBLE);
+
 
             if (requestCode == IMAGE_RESULT) {
 
                 String filePath = getImageFilePath(data);
                 if (filePath != null) {
                     selectedImage = BitmapFactory.decodeFile(filePath);
+                    textView.setVisibility(View.INVISIBLE);
                     imageView.setVisibility(View.VISIBLE);
                     imageView.setImageBitmap(selectedImage);
                     mTextButton.setVisibility(View.VISIBLE);
