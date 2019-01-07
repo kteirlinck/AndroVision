@@ -50,8 +50,7 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class
-CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity {
 
     Uri picUri;
 
@@ -168,12 +167,14 @@ CameraActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             ImageView imageView = findViewById(R.id.imageView);
+            imageView.setVisibility(View.INVISIBLE);
 
             if (requestCode == IMAGE_RESULT) {
 
                 String filePath = getImageFilePath(data);
                 if (filePath != null) {
                     selectedImage = BitmapFactory.decodeFile(filePath);
+                    imageView.setVisibility(View.VISIBLE);
                     imageView.setImageBitmap(selectedImage);
                     mTextButton.setVisibility(View.VISIBLE);
                 }
