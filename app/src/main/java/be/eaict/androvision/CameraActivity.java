@@ -173,7 +173,6 @@ public class CameraActivity extends AppCompatActivity {
             TextView textView = findViewById(R.id.textview);
             imageView.setVisibility(View.INVISIBLE);
 
-
             if (requestCode == IMAGE_RESULT) {
 
                 String filePath = getImageFilePath(data);

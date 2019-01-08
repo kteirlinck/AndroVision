@@ -3,4 +3,7 @@
     <string name="imagetotextract">ImageToTextract</string>
     <string name="button_text_string">Find Text</string>
     <string name="btn_next_string">NEXT</string>
+    <string name="btnReturn_string">Return</string>
+    <string name="btnSave_string">Save</string>
+    <string name="txtHint_string">Take a photo to textract from!</string>
 </resources>

@@ -20,12 +20,12 @@
             android:layout_height="339dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:adjustViewBounds="true"
-            android:text="Maak van jou foto een notitie!"
-            android:textSize="25sp"
-            android:textAlignment="center"
             android:layout_marginTop="300dp"
-            android:scaleType="centerCrop" />
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:text="@string/txtHint_string"
+            android:textAlignment="center"
+            android:textSize="25sp" />
 
 
         <ImageView
